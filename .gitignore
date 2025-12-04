@@ -1,0 +1,11 @@
+# dependencias
+node_modules
+
+# credenciales
+.env
+
+# logs
+*.log
+
+# output
+/dist
