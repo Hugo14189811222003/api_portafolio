@@ -1,74 +1,85 @@
-create database portafolio;
-use portafolio;
-select * from proyecto_tecnologia;
+-- Tabla usuario
+CREATE TABLE usuario (
+    id SERIAL PRIMARY KEY,
+    nombre VARCHAR(150) NOT NULL,
+    gmail VARCHAR(150) NOT NULL UNIQUE,
+    password VARCHAR(150) NOT NULL,
+    creado_en TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
 
-create table usuario (
-id int auto_increment primary key,
-nombre varchar(150) not null,
-gmail varchar(150) not null unique,
-password varchar(150) not null,
-creado_en datetime default current_timestamp
+-- Tabla sobre_mi
+CREATE TABLE sobre_mi (
+    id SERIAL PRIMARY KEY,
+    id_usuario INT NOT NULL,
+    titulo VARCHAR(150),
+    descripcion TEXT,
+    creado_en TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (id_usuario) REFERENCES usuario(id) ON DELETE CASCADE
 );
-create table sobre_mi (
-id int auto_increment primary key,
-id_usuario int not null,
-titulo varchar(150),
-descripcion text,
-creado_en datetime default current_timestamp,
-foreign key(id_usuario) references usuario(id) on delete cascade
+
+-- Tabla experiencia_profesional
+CREATE TABLE experiencia_profesional (
+    id SERIAL PRIMARY KEY,
+    id_usuario INT NOT NULL,
+    titulo VARCHAR(150),
+    trabajo_anterior VARCHAR(150),
+    inicio_fin VARCHAR(150),
+    informacion TEXT,
+    creado_en TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (id_usuario) REFERENCES usuario(id) ON DELETE CASCADE
 );
-create table experiencia_profesional (
-id int auto_increment primary key,
-id_usuario int not null,
-titulo varchar(150),
-trabajo_anterior varchar(150),
-inicio_fin varchar(150),
-informacion text,
-creado_en datetime default current_timestamp,
-foreign key(id_usuario) references usuario(id) on delete cascade
+
+-- Tabla educacion
+CREATE TABLE educacion (
+    id SERIAL PRIMARY KEY,
+    id_usuario INT NULL,
+    titulo VARCHAR(150),
+    universidad VARCHAR(225),
+    inicio_fin VARCHAR(150),
+    creado_en TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (id_usuario) REFERENCES usuario(id)
 );
-create table educacion (
-id int auto_increment primary key,
-id_usuario int null,
-titulo varchar(150),
-universidad varchar(225),
-inicio_fin varchar(150),
-creado_en datetime default current_timestamp,
-foreign key(id_usuario) references usuario(id)
+
+-- Tabla proyecto
+CREATE TABLE proyecto (
+    id SERIAL PRIMARY KEY,
+    tipo TEXT CHECK (tipo IN ('paginas web', 'branding')),
+    creado_en TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
-create table proyecto (
-id int auto_increment primary key,
-tipo enum('paginas web', 'branding'),
-creado_en datetime default current_timestamp
+
+-- Tabla web
+CREATE TABLE web (
+    id SERIAL PRIMARY KEY,
+    id_proyecto INT NOT NULL,
+    titulo VARCHAR(150) NOT NULL,
+    link_github VARCHAR(150) NOT NULL,
+    link_demo VARCHAR(150) NOT NULL,
+    creado_en TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (id_proyecto) REFERENCES proyecto(id) ON DELETE CASCADE
 );
-create table web (
-id int auto_increment primary key,
-id_proyecto int not null,
-titulo varchar(150) not null,
-link_github varchar(150) not null,
-link_demo varchar(150) not null,
-creado_en datetime default current_timestamp,
-foreign key(id_proyecto) references proyecto(id) on delete cascade
+
+-- Tabla marca
+CREATE TABLE marca (
+    id SERIAL PRIMARY KEY,
+    id_proyecto INT NOT NULL,
+    titulo VARCHAR(150) NOT NULL,
+    link_behance VARCHAR(150) NOT NULL,
+    link_demo VARCHAR(150) NOT NULL,
+    creado_en TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (id_proyecto) REFERENCES proyecto(id) ON DELETE CASCADE
 );
-create table marca (
-id int auto_increment primary key,
-id_proyecto int not null,
-titulo varchar(150) not null,
-link_behance varchar(150) not null,
-link_demo varchar(150) not null,
-creado_en datetime default current_timestamp,
-foreign key(id_proyecto) references proyecto(id) on delete cascade
+
+-- Tabla tecnologia
+CREATE TABLE tecnologia (
+    id SERIAL PRIMARY KEY,
+    titulo VARCHAR(150) NOT NULL
 );
-create table tecnologia (
-id int auto_increment primary key,
-titulo varchar(150) not null
-);
-create table proyecto_tecnologia (
-id int auto_increment primary key,
-id_proyecto int not null,
-id_tecnologia int not null,
-FOREIGN KEY (id_proyecto) REFERENCES proyecto(id)
-    ON DELETE CASCADE,
-FOREIGN KEY (id_tecnologia) REFERENCES tecnologia(id)
-    ON DELETE CASCADE
+
+-- Tabla proyecto_tecnologia
+CREATE TABLE proyecto_tecnologia (
+    id SERIAL PRIMARY KEY,
+    id_proyecto INT NOT NULL,
+    id_tecnologia INT NOT NULL,
+    FOREIGN KEY (id_proyecto) REFERENCES proyecto(id) ON DELETE CASCADE,
+    FOREIGN KEY (id_tecnologia) REFERENCES tecnologia(id) ON DELETE CASCADE
 );

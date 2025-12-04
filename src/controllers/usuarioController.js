@@ -2,7 +2,7 @@ const pool = require('../database');
 
 const getUsuarios = async (req, res) => {
     try {
-        const [rows] = await pool.query('SELECT * FROM usuario');
+        const { rows } = await pool.query('SELECT * FROM usuario');
         res.json(rows);
     } catch (error) {
         res.status(500).json({ message: 'Error al obtener usuarios', error });
@@ -12,7 +12,7 @@ const getUsuarios = async (req, res) => {
 const getUsuarioById = async (req, res) => {
     const { id } = req.params;
     try {
-        const [rows] = await pool.query('SELECT * FROM usuario WHERE id = ?', [id]);
+        const { rows } = await pool.query('SELECT * FROM usuario WHERE id = $1', [id]);
         if (rows.length === 0) return res.status(404).json({ message: 'Usuario no encontrado' });
         res.json(rows[0]);
     } catch (error) {
@@ -23,8 +23,8 @@ const getUsuarioById = async (req, res) => {
 const createUsuario = async (req, res) => {
     const { nombre, gmail, password } = req.body;
     try {
-        const [result] = await pool.query('INSERT INTO usuario (nombre, gmail, password) VALUES (?, ?, ?)', [nombre, gmail, password]);
-        res.status(201).json({ id: result.insertId, nombre, gmail });
+        const { rows } = await pool.query('INSERT INTO usuario (nombre, gmail, password) VALUES ($1, $2, $3) RETURNING id', [nombre, gmail, password]);
+        res.status(201).json({ id: rows[0].id, nombre, gmail });
     } catch (error) {
         res.status(500).json({ message: 'Error al crear usuario', error });
     }
@@ -34,8 +34,8 @@ const updateUsuario = async (req, res) => {
     const { id } = req.params;
     const { nombre, gmail, password } = req.body;
     try {
-        const [result] = await pool.query('UPDATE usuario SET nombre = ?, gmail = ?, password = ? WHERE id = ?', [nombre, gmail, password, id]);
-        if (result.affectedRows === 0) return res.status(404).json({ message: 'Usuario no encontrado' });
+        const result = await pool.query('UPDATE usuario SET nombre = $1, gmail = $2, password = $3 WHERE id = $4', [nombre, gmail, password, id]);
+        if (result.rowCount === 0) return res.status(404).json({ message: 'Usuario no encontrado' });
         res.json({ message: 'Usuario actualizado correctamente' });
     } catch (error) {
         res.status(500).json({ message: 'Error al actualizar usuario', error });
@@ -45,8 +45,8 @@ const updateUsuario = async (req, res) => {
 const deleteUsuario = async (req, res) => {
     const { id } = req.params;
     try {
-        const [result] = await pool.query('DELETE FROM usuario WHERE id = ?', [id]);
-        if (result.affectedRows === 0) return res.status(404).json({ message: 'Usuario no encontrado' });
+        const result = await pool.query('DELETE FROM usuario WHERE id = $1', [id]);
+        if (result.rowCount === 0) return res.status(404).json({ message: 'Usuario no encontrado' });
         res.json({ message: 'Usuario eliminado correctamente' });
     } catch (error) {
         res.status(500).json({ message: 'Error al eliminar usuario', error });
