@@ -32,12 +32,12 @@ CREATE TABLE experiencia_profesional (
 -- Tabla educacion
 CREATE TABLE educacion (
     id SERIAL PRIMARY KEY,
-    id_usuario INT NULL,
+    id_usuario INT,
     titulo VARCHAR(150),
     universidad VARCHAR(225),
     inicio_fin VARCHAR(150),
     creado_en TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (id_usuario) REFERENCES usuario(id)
+    FOREIGN KEY (id_usuario) REFERENCES usuario(id) ON DELETE SET NULL
 );
 
 -- Tabla proyecto
