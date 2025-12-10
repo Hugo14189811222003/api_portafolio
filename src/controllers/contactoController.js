@@ -19,6 +19,26 @@ const getContacto = async (req, res) => {
      }
 }
 
+const getContactoById = async (req, res) => {
+    try {
+        const {id} = req.params;
+        const { rows } = await pool.query('SELECT * FROM contacto WHERE id = $1', [id]);
+        if(rows.length > 0) {
+            console.log('Datos encontrados con exito');
+            return res.status(200).json(rows);
+        } else {
+            res.status(404).json({
+                message: 'No se encontraron resultados'
+            })
+        }
+    } catch (error) {
+        console.log('Error con la base de datos');
+        res.status(500).json({
+            message: 'Problema con el servidor'
+        })
+    }
+}
+
 const postContacto = async (req, res) => {
     const {id_usuario, email, telefono, direccion} = req.body;
     if(!id_usuario || !telefono || !email || !direccion) {
@@ -103,5 +123,6 @@ module.exports = {
     getContacto,
     postContacto,
     putContacto,
-    deleteContacto
+    deleteContacto,
+    getContactoById
 }
