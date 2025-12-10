@@ -54,9 +54,12 @@ CREATE TABLE contacto (
 -- Tabla proyecto
 CREATE TABLE proyecto (
     id SERIAL PRIMARY KEY,
+    id_usuario INT NOT NULL,
     tipo TEXT CHECK (tipo IN ('paginas web', 'branding')),
-    creado_en TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    creado_en TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (id_usuario) REFERENCES usuario(id) ON DELETE CASCADE
 );
+
 
 -- Tabla web
 CREATE TABLE web (

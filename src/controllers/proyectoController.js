@@ -21,9 +21,9 @@ const getProyectoById = async (req, res) => {
 };
 
 const createProyecto = async (req, res) => {
-    const { tipo } = req.body;
+    const { tipo, id_usuario } = req.body;
     try {
-        const { rows } = await pool.query('INSERT INTO proyecto (tipo) VALUES ($1) RETURNING id', [tipo]);
+        const { rows } = await pool.query('INSERT INTO proyecto (tipo, id_usuario) VALUES ($1, $2) RETURNING id', [tipo, id_usuario]);
         res.status(201).json({ id: rows[0].id, tipo });
     } catch (error) {
         res.status(500).json({ message: 'Error al crear proyecto', error });
@@ -32,9 +32,9 @@ const createProyecto = async (req, res) => {
 
 const updateProyecto = async (req, res) => {
     const { id } = req.params;
-    const { tipo } = req.body;
+    const { tipo, id_usuario } = req.body;
     try {
-        const result = await pool.query('UPDATE proyecto SET tipo = $1 WHERE id = $2', [tipo, id]);
+        const result = await pool.query('UPDATE proyecto SET tipo = $1, id_usuario = $2 WHERE id = $3', [tipo, id_usuario, id]);
         if (result.rowCount === 0) return res.status(404).json({ message: 'Proyecto no encontrado' });
         res.json({ message: 'Proyecto actualizado correctamente' });
     } catch (error) {
