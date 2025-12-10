@@ -40,6 +40,17 @@ CREATE TABLE educacion (
     FOREIGN KEY (id_usuario) REFERENCES usuario(id) ON DELETE SET NULL
 );
 
+-- Tabla contacto
+CREATE TABLE contacto (
+    id SERIAL PRIMARY KEY,
+    id_usuario INT NOT NULL,
+    email VARCHAR(150),
+    telefono VARCHAR(20),
+	direccion VARCHAR(150),
+    creado_en TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (id_usuario) REFERENCES usuario(id) ON DELETE CASCADE
+);
+
 -- Tabla proyecto
 CREATE TABLE proyecto (
     id SERIAL PRIMARY KEY,
