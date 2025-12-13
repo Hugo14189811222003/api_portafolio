@@ -1,6 +1,6 @@
 const pool = require('../database');
 const cloudinary = require('../cloudinary.config');
-const fs = require('fs');
+
 
 const getMarcas = async (req, res) => {
     try {
@@ -28,13 +28,8 @@ const createMarca = async (req, res) => {
         let img = null;
         let img_public_id = null;
         if(req.file) {
-            const result = await cloudinary.uploader.upload(req.file.path, {
-                folder: `marca/proyecto_${id_proyecto}`
-            })
-            img = result.secure_url;
-            img_public_id = result.public_id;
-            fs.unlinkSync(req.file.path);
-
+            img = req.file.path;
+            img_public_id = req.file.filename;
         }
         const { rows } = await pool.query('INSERT INTO marca (id_proyecto, titulo, descripcion, img, img_public_id, link_behance, link_demo) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id', [id_proyecto, titulo, descripcion, img, img_public_id, link_behance, link_demo]);
         res.status(201).json({ id: rows[0].id, id_proyecto, titulo, descripcion, img, link_behance, link_demo });
@@ -55,12 +50,8 @@ const updateMarca = async (req, res) => {
             if(rows[0].img_public_id) {
                 await cloudinary.uploader.destroy(rows[0].img_public_id);
             }
-            const result = await cloudinary.uploader.upload(req.file.path, {
-                folder: `marca/proyecto_${id_proyecto}`
-            })
-            img = result.secure_url;
-            img_public_id = result.public_id;
-            fs.unlinkSync(req.file.path);
+            img = req.file.path;
+            img_public_id = req.file.filename;
         }
 
         const result = await pool.query('UPDATE marca SET id_proyecto = $1, titulo = $2, descripcion = $3, img = $4, img_public_id = $5, link_behance = $6, link_demo = $7 WHERE id = $8', [id_proyecto, titulo, descripcion, img, img_public_id, link_behance, link_demo, id]);

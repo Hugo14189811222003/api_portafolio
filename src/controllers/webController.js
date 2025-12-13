@@ -1,6 +1,6 @@
 const pool = require('../database');
 const cloudinary = require('../cloudinary.config');
-const fs = require('fs');
+
 
 const getWebs = async (req, res) => {
     try {
@@ -28,13 +28,10 @@ const createWeb = async (req, res) => {
         let img= null;
         let img_public_id= null;
 
+
         if(req.file) {
-            const result = await cloudinary.uploader.upload(req.file.path, {
-                folder: `web/proyecto_${id_proyecto}`
-            });
-            img = result.secure_url;
-            img_public_id = result.public_id;
-            fs.unlinkSync(req.file.path);
+            img = req.file.path;
+            img_public_id = req.file.filename;
         }
 
         const { rows } = await pool.query('INSERT INTO web (id_proyecto, titulo, descripcion, img, img_public_id, link_github, link_demo) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id', [id_proyecto, titulo, descripcion, img, img_public_id, link_github, link_demo]);
@@ -59,16 +56,10 @@ const updateWeb = async (req, res) => {
             if (img_public_id) {
                 await cloudinary.uploader.destroy(img_public_id);
             }
-
-      const result = await cloudinary.uploader.upload(req.file.path, {
-        folder: `web/proyecto_${id_proyecto}`
-      });
-
-      img = result.secure_url;
-      img_public_id = result.public_id;
-
-      fs.unlinkSync(req.file.path);
-    }
+            
+            img = req.file.path;
+            img_public_id = req.file.filename;
+        }
 
     await pool.query(
       `UPDATE web SET
