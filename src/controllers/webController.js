@@ -42,7 +42,7 @@ const createWeb = async (req, res) => {
         const { rows } = await pool.query('INSERT INTO web (id_proyecto, titulo, descripcion, img, img_public_id, link_github, link_demo) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id', [id_proyecto, titulo, descripcion, img, img_public_id, link_github, link_demo]);
         res.status(201).json({ id: rows[0].id, id_proyecto, titulo, descripcion, img, img_public_id, link_github, link_demo });
     } catch (error) {
-        res.status(500).json({ message: 'Error al crear proyecto web', error });
+        res.status(500).json({ message: 'Error al crear proyecto web', error: error.message });
     }
 };
 
