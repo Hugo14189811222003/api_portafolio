@@ -17,6 +17,7 @@ app.use('/api/webs', require('./routers/webRoutes'));
 app.use('/api/marcas', require('./routers/marcaRoutes'));
 app.use('/api/tecnologias', require('./routers/tecnologiaRoutes'));
 app.use('/api/contacto', require('./routers/contactoRoutes'));
+app.use('/api/habilidad', require('./routers/habilidadRoutes'));
 
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);

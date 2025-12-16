@@ -103,3 +103,22 @@ CREATE TABLE proyecto_tecnologia (
     FOREIGN KEY (id_proyecto) REFERENCES proyecto(id) ON DELETE CASCADE,
     FOREIGN KEY (id_tecnologia) REFERENCES tecnologia(id) ON DELETE CASCADE
 );
+
+-- Tabla habilidad
+CREATE TABLE habilidad (
+    id SERIAL PRIMARY KEY,
+    id_usuario INT NOT NULL,
+    titulo VARCHAR(150) NOT NULL,
+    FOREIGN KEY (id_usuario) REFERENCES usuario(id) ON DELETE CASCADE
+);
+
+-- Tabla habilidades
+CREATE TABLE habilidades (
+    id SERIAL PRIMARY KEY,
+    id_habilidad INT NOT NULL,
+    titulo VARCHAR(150) NOT NULL,
+    porcentaje DOUBLE PRECISION CHECK (porcentaje BETWEEN 0 AND 100),
+    FOREIGN KEY (id_habilidad) REFERENCES habilidad(id) ON DELETE CASCADE
+);
+
+
