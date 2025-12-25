@@ -25,6 +25,12 @@ const getMarcaById = async (req, res) => {
 
 const createMarca = async (req, res) => {
     const { id_proyecto, titulo, descripcion, link_behance, link_demo } = req.body;
+
+    if (!id_proyecto) {
+        return res.status(400).json({
+            message: 'id_proyecto es obligatorio'
+        });
+    }
     try {
         let img = null;
         let img_public_id = null;
@@ -40,7 +46,11 @@ const createMarca = async (req, res) => {
         const { rows } = await pool.query('INSERT INTO marca (id_proyecto, titulo, descripcion, img, img_public_id, link_behance, link_demo) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id', [id_proyecto, titulo, descripcion, img, img_public_id, link_behance, link_demo]);
         res.status(201).json({ id: rows[0].id, id_proyecto, titulo, descripcion, img, link_behance, link_demo });
     } catch (error) {
-        res.status(500).json({ message: 'Error al crear proyecto de marca', error });
+        console.error('ERROR CREATE MARCA:', error);
+        res.status(500).json({
+            message: 'Error al crear proyecto de marca',
+            error: error.message
+        });
     }
 };
 
