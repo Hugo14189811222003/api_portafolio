@@ -68,7 +68,7 @@ CREATE TABLE web (
     titulo VARCHAR(150) NOT NULL,
     descripcion TEXT,
     img TEXT,
-    img_public_id TEXT
+    img_public_id TEXT,
     link_github VARCHAR(150) NOT NULL,
     link_demo VARCHAR(150) NOT NULL,
     creado_en TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
